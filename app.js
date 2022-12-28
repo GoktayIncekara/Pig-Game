@@ -1,10 +1,11 @@
-let scores, roundScore, activePlayer, finalScore;
+let scores, roundScore, activePlayer, finalScore, gameActive;
 init();
 
 function init() {
   scores = [0, 0];
   roundScore = 0;
   activePlayer = 0;
+  gameActive = true;
 
   document.querySelector(".final-score").style.display = "inline";
   document.querySelector(".btn-start").style.display = "inline";
@@ -42,33 +43,39 @@ function start() {
 document.querySelector(".btn-start").addEventListener("click", start);
 
 document.querySelector(".btn-roll").addEventListener("click", function () {
-  let dice = Math.floor(Math.random() * 6) + 1;
+  if (gameActive) {
+    let dice = Math.floor(Math.random() * 6) + 1;
 
-  document.querySelector("#dice-1").style.display = "block";
-  document.querySelector("#dice-1").src = "dice-" + dice + ".png";
+    document.querySelector("#dice-1").style.display = "block";
+    document.querySelector("#dice-1").src = "dice-" + dice + ".png";
 
-  if (dice !== 1) {
-    roundScore += dice;
-    document.querySelector("#current-" + activePlayer).textContent = roundScore;
-  } else {
-    nextPlayer();
+    if (dice !== 1) {
+      roundScore += dice;
+      document.querySelector("#current-" + activePlayer).textContent =
+        roundScore;
+    } else {
+      nextPlayer();
+    }
   }
 });
 
 document.querySelector(".btn-hold").addEventListener("click", function () {
-  scores[activePlayer] += roundScore;
+  if (gameActive) {
+    scores[activePlayer] += roundScore;
 
-  document.querySelector("#score-" + activePlayer).textContent =
-    scores[activePlayer];
+    document.querySelector("#score-" + activePlayer).textContent =
+      scores[activePlayer];
 
-  if (scores[activePlayer] >= finalScore) {
-    document.querySelector("#name-" + activePlayer).textContent = "Winner!";
-    document.querySelector("#dice-1").style.display = "none";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.add("winner");
-  } else {
-    nextPlayer();
+    if (scores[activePlayer] >= finalScore) {
+      document.querySelector("#name-" + activePlayer).textContent = "Winner!";
+      document.querySelector("#dice-1").style.display = "none";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.add("winner");
+      gameActive = false;
+    } else {
+      nextPlayer();
+    }
   }
 });
 
